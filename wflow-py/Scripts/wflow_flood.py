@@ -222,8 +222,8 @@ from optparse import OptionParser
 import numpy as np
 
 import pcraster as pcr
-from osgeo import gdal, gdalconst
 import netCDF4 as nc
+from osgeo import gdal, gdalconst
 
 import wflow_flood_lib as inun_lib
 import wflow.pcrut as pcrut
