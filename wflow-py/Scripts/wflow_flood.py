@@ -224,6 +224,7 @@ import numpy as np
 import pcraster as pcr
 import netCDF4 as nc
 from osgeo import gdal, gdalconst
+from osgeo import gdal, gdalconst
 
 import wflow_flood_lib as inun_lib
 import wflow.pcrut as pcrut
