@@ -23,8 +23,8 @@ class MyTest(unittest.TestCase):
 
         print("-------------- Grid origin: ")
         gorigin = bmiobj.get_grid_origin('Altitude')
-        print(gorigin)
-        self.assertAlmostEquals(sum([52.054268, 5.2271633]), sum(gorigin),places=4)
+        #print(gorigin)
+        self.assertAlmostEquals(sum([45.875934703275561, 5.2088299822062254]), sum(gorigin),places=4)
 
         print("-------------- Grid shape: ")
         print(bmiobj.get_grid_shape('Altitude'))
@@ -147,10 +147,12 @@ class MyTest(unittest.TestCase):
         et = bmiobj.get_end_time()
         st = bmiobj.get_start_time()
         ts = 86400
-        # Do one timestep and check
-        bmiobj.get_current_time()
+        # Do timesteps and chak
+
         bmiobj.update_until(et)
+        bmiobj.get_current_time()
         bmiobj.finalize()
+        print et - bmiobj.get_current_time()
         self.assertEquals(et,bmiobj.get_current_time())
 
 
@@ -158,7 +160,7 @@ class MyTest(unittest.TestCase):
     def testbmirun_l(self):
         print 'Run with update(-1)'
         bmiobj = bmi.wflowbmi_light()
-        bmiobj.initialize('wflow_sceleton/wflow_sceleton.ini',loglevel=logging.DEBUG)
+        bmiobj.initialize('wflow_sceleton/wflow_sceleton.ini',loglevel=logging.ERROR)
         et = bmiobj.get_end_time()
         st = bmiobj.get_start_time()
         bmiobj.update(et - st)
@@ -166,7 +168,7 @@ class MyTest(unittest.TestCase):
 
     def testbmirunnetcdf(self):
         bmiobj = bmi.wflowbmi_csdms()
-        bmiobj.initialize_config('wflow_sbm/wflow_sbm_nc.ini',loglevel=logging.DEBUG)
+        bmiobj.initialize_config('wflow_sbm/wflow_sbm_nc.ini',loglevel=logging.ERROR)
         #bmiobj.set_attribute_value('run:starttime','2014-05-01 01:00:00')
         #bmiobj.set_attribute_value('run:endtime','2014-05-17 00:00:00')
         #bmiobj.set_attribute_value('run:runlengthdetermination','steps')

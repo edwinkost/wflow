@@ -86,7 +86,7 @@ import getopt
 from wflow.wf_DynamicFramework import *
 from wflow.wf_DynamicFramework import *
 from wflow.wflow_adapt import *
-from wflow_adapt import *    
+from wflow.wflow_adapt import *
         
 #import scipy
 #import pcrut
@@ -237,14 +237,7 @@ class WflowModel(DynamicModel):
         self.logger.info("Saving initial conditions for FEWS...")
         self.wf_suspend(os.path.join(self.Dir, "outstate"))
         
-    report(self.sumprecip,os.path.join(self.SaveDir,"outsum","sumprecip.map"))
-    report(self.sumevap,os.path.join(self.SaveDir, "outsum","sumevap.map"))
-    report(self.sumpotevap,os.path.join(self.SaveDir, "outsum","sumpotevap.map"))
-    report(self.sumtemp,os.path.join(self.SaveDir, "outsum","sumtemp.map"))
-    report(self.sumlevel,os.path.join(self.SaveDir, "outsum","sumlevel.map"))
-    report(self.sumrunoff/catchmenttotal(1,self.TopoLdd),os.path.join(self.SaveDir,"outsum","sumrunoff.map"))
 
-    report(self.suminflow,os.path.join(self.SaveDir, "outsum","suminflow.map"))
       
   def initial(self):
       
@@ -318,8 +311,8 @@ class WflowModel(DynamicModel):
     self.scalarInput = int(configget(self.config,"model","ScalarInput","0"))
     self.Tslice = int(configget(self.config,"model","Tslice","1"))
     self.interpolMethod = configget(self.config,"model","InterpolationMethod","inv")
-    self.reinit = int(configget(self.config,"model","reinit","0"))
-    self.fewsrun = int(configget(self.config,"model","fewsrun","0"))
+    self.reinit = int(configget(self.config,"run","reinit","0"))
+    self.fewsrun = int(configget(self.config,"run","fewsrun","0"))
     self.OverWriteInit = int(configget(self.config,"model","OverWriteInit","0"))
     self.updating = int(configget(self.config,"model","updating","0"))
     self.updateFile = configget(self.config,"model","updateFile","no_set")
@@ -366,7 +359,7 @@ class WflowModel(DynamicModel):
     
     self.Altitude=self.wf_readmap(os.path.join(self.Dir,wflow_dem),0.0,fail=True) * scalar(defined(subcatch)) #: The digital elevation map (DEM)
     self.TopoLdd=self.wf_readmap(os.path.join(self.Dir, wflow_ldd),0.0,fail=True)        #: The local drinage definition map (ldd)
-    self.TopoId=self.wf_readmap(os.path.join(self.Dir, wflow_subcatch),0.0,fail=True)        #: Map define the area over which the calculations are done (mask)
+    self.TopoId=ordinal(self.wf_readmap(os.path.join(self.Dir, wflow_subcatch),0.0,fail=True) )       #: Map define the area over which the calculations are done (mask)
     self.River=cover(boolean(self.wf_readmap(os.path.join(self.Dir, wflow_river),0.0,fail=True)),0) #: river network map. Fro those cell that belong to a river a specific width is used in the kinematic wave caulations
     self.RiverLength=self.wf_readmap(os.path.join(self.Dir, wflow_riverlength),0.0)
     # Factor to multiply riverlength with (defaults to 1.0)    
@@ -667,7 +660,7 @@ class WflowModel(DynamicModel):
     """
 
     self.wf_updateparameters() # read forcing an dynamic parameters
-    self.Precipitation = max(0.0,self.Precipitation)  * self.Pcorr
+    self.Precipitation = max(0.0,self.Precipitation) * self.Pcorr
 
     #self.Precipitation=cover(self.wf_readmap(self.P_mapstack,0.0),0.0) * self.Pcorr
     #self.PotEvaporation=cover(self.wf_readmap(self.PET_mapstack,0.0),0.0)

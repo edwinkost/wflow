@@ -169,6 +169,14 @@ The wflow\_sbm model
 
    wflow_sbm
 
+
+The wflow\_sbm2 model
+=====================
+.. toctree::
+   :maxdepth: 2
+
+   wflow_sbm2
+
 The wflow\_gr4 model
 ====================
 .. toctree::
@@ -291,6 +299,20 @@ References
     Tobón, C.: Final Technical Report DFID-FRP Project no. R7991 Hydrological
     impacts of converting tropical montane cloud forest to pasture, with
     initial reference to northern Costa Rica.,, 2006.
+
+
+Papers/reports using wflow
+==========================
+
+Jeuken, A., L. Bouaziz, G. Corzo, and L. Alfonso, 2016: Analyzing Needs for Climate Change Adaptation
+   in the Magdalena River Basin in Colombia. Climate Change Adaptation, Resilience and Hazards, W.L. Filho,
+   H. Musa, G. Cavan, P. O’Hare, and J. Seixas, Eds., Climate Change Management, Springer International Publishing,
+   329–344 http://link.springer.com/chapter/10.1007/978-3-319-39880-8_20 (Accessed September 26, 2016).
+
+Lopez Lopez, P., N. Wanders, J. Schellekens, L. J. Renzullo, E. H. Sutanudjaja, and M. F. P. Bierkens, 2015: Improved
+ large-scale hydrological modelling through the assimilation of streamflow and downscaled satellite soil moisture
+ observations. Hydrology and Earth System Sciences Discussions, 12, 10559–10601, doi:10.5194/hessd-12-10559-2015.
+
 
 
 TODO

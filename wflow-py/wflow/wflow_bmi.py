@@ -60,13 +60,13 @@ class wflowbmi_light(object):
         #       Get name of module from ini file name
 
         maxNrSteps = 10000
-        if "wflow_sbm.ini" in configfile:
+        if "wflow" in configfile and "sbm" in configfile and ".ini" in configfile:
             import wflow_sbm as wf
             self.name = "wflow_sbm"
-        elif "wflow_hbv.ini" in configfile:
+        elif "wflow" in configfile and "hbv" in configfile and ".ini" in configfile:
             import wflow_hbv as wf
             self.name = "wflow_hbv"
-        elif "wflow_routing.ini" in configfile:
+        elif "wflow" in configfile and "routing" in configfile and ".ini" in configfile:
             import wflow_routing as wf
             self.name = "wflow_routing"
         else:
@@ -78,8 +78,9 @@ class wflowbmi_light(object):
         myModel = wf.WflowModel(wflow_cloneMap, datadir, runid, inifile)
 
         self.dynModel = wf.wf_DynamicFramework(myModel, maxNrSteps, firstTimestep = 1)
+        self.bmilogger.info("Framework initialized...")
         self.dynModel.createRunId(NoOverWrite=0,level=loglevel,model=os.path.basename(configfile))
-
+        self.bmilogger.info("initialize: created runID...")
 
         namesroles = self.dynModel.wf_supplyVariableNamesAndRoles()
         inames = []
@@ -97,7 +98,9 @@ class wflowbmi_light(object):
         self.inputoutputvars = inames
 
         self.dynModel._runInitial()
+        self.bmilogger.info("Model initialised...")
         self.dynModel._runResume()
+        self.bmilogger.info("Resumed states...")
 
         return retval
 
@@ -944,9 +947,12 @@ class wflowbmi_csdms(bmi.Bmi):
 
         :return: X, Y: ,the lower left corner of the grid.
         """
-        dims = self.dynModel.wf_supplyGridDim()
-        x = dims[0]
-        y = dims[1]
+        dims = self.dynModel.wf_supplyGridDim() # returns in cell centre
+
+        xsize = dims[2]
+        ysize = dims[3]
+        x = dims[0] - (xsize * 0.5)
+        y = dims[7] - (ysize * 0.5)
         self.bmilogger.debug("get_grid_origin: " + long_var_name + ' result: ' + str([y, x]))
         return [y, x]
 

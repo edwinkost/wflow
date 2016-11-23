@@ -4,14 +4,16 @@ Created on Jul 8, 2014
 @author: niels
 '''
 
+
+
 from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 from thrift.server import TServer
 
-from openda.bmi.thrift.BMIService import Iface
-from openda.bmi.thrift.BMIService import Processor
-from openda.bmi.thrift.ttypes import ModelException, BmiGridType
+from openda_bmi.openda.bmi.thrift.BMIService import Iface
+from openda_bmi.openda.bmi.thrift.BMIService import Processor
+from openda_bmi.openda.bmi.thrift.ttypes import ModelException, BmiGridType
 
 import sys
 import signal
@@ -303,8 +305,8 @@ if __name__ == '__main__':
     #setup root logger to catch any warnings and errors. Most models will override and/or add to these settings.
     logging.basicConfig(level=logging.WARNING)
     
-    model_module_name = sys.argv[1]
-    model_class_name = sys.argv[2]
+    model_module_name = sys.argv[3]
+    model_class_name = sys.argv[4]
     
     model_module = importlib.import_module(model_module_name)
     model_class = getattr(model_module, model_class_name)
@@ -314,7 +316,7 @@ if __name__ == '__main__':
     handler = ModelHandler(model)
     processor = Processor(handler)
     
-    transport = TSocket.TServerSocket(host=sys.argv[3],port=sys.argv[4])
+    transport = TSocket.TServerSocket(host=sys.argv[5],port=sys.argv[6])
 
     tfactory = TTransport.TBufferedTransportFactory()
     pfactory = TBinaryProtocol.TBinaryProtocolFactory()

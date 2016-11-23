@@ -21,13 +21,13 @@ $Id: wflow_sceleton.py 898 2014-01-09 14:47:06Z schelle $
 $Rev: 898 $
 """
 
-import reservoir_Si
-import reservoir_Sa
-import reservoir_Sw
-import reservoir_Su
-import reservoir_Sf
-import reservoir_Ss
-import JarvisCoefficients
+import wflow.reservoir_Si as reservoir_Si
+import wflow.reservoir_Sa as reservoir_Sa
+import wflow.reservoir_Sw as reservoir_Sw
+import wflow.reservoir_Su as reservoir_Su
+import wflow.reservoir_Sf as reservoir_Sf
+import wflow.reservoir_Ss as reservoir_Ss
+import wflow.JarvisCoefficients as JarvisCoefficients
 
 import numpy
 import os
@@ -285,7 +285,7 @@ class WflowModel(DynamicModel):
         self.InputSeries = int(configget(self.config,
                                          "model", "InputSeries", "1"))  # forcing data in maps (0) or timeseries (1)
         self.reinit = int(configget(self.config,
-                                    "model", "reinit", "0"))
+                                    "run", "reinit", "0"))
         
         self.intbl = configget(self.config,
                                     "model","intbl","intbl")
@@ -453,6 +453,8 @@ class WflowModel(DynamicModel):
                                                  0 * scalar(self.TopoId)))  # location of subcatchment
 
         self.ZeroMap = 0.0 * scalar(subcatch)  # map with only zero's
+
+        self.wf_multparameters()
 
 
         # For in memory override:
@@ -753,8 +755,8 @@ class WflowModel(DynamicModel):
         self.convQa_WB = areatotal(sum(multiply([sum(self.convQa_t[i]) for i in self.Classes],self.percent)) / 1000 * self.surfaceArea,nominal(self.TopoId))
         self.trackQWB = areatotal(sum(self.trackQ),nominal(self.TopoId))
         self.trackQ_WB = areatotal(sum(self.trackQ_t),nominal(self.TopoId)) 
-        self.QstateWB = areatotal(sum(self.Qstate) * 3600, nominal(self.TopoId))
-        self.Qstate_WB = areatotal(sum(self.Qstate_t) * 3600, nominal(self.TopoId))
+        self.QstateWB = areatotal(sum(self.Qstate) * self.timestepsecs, nominal(self.TopoId))
+        self.Qstate_WB = areatotal(sum(self.Qstate_t) * self.timestepsecs, nominal(self.TopoId))
 #        self.QstateWB = areatotal(sum(self.Qstate) * 0.0405, nominal(self.TopoId))
 #        self.Qstate_WB = areatotal(sum(self.Qstate_t) * 0.0405, nominal(self.TopoId))
 #        self.QstateWB = areatotal(self.Qstate, nominal(self.TopoId))
@@ -814,7 +816,7 @@ def main(argv=None):
             usage()
             return
 
-    opts, args = getopt.getopt(argv, 'C:S:T:Ic:s:R:F:fl:L:')
+    opts, args = getopt.getopt(argv, 'C:S:T:Ic:s:R:F:fl:L:P:p:')
 
     for o, a in opts:
         if o == '-F': 
@@ -858,7 +860,33 @@ def main(argv=None):
     dynModelFw.createRunId(NoOverWrite=False, level=logging.DEBUG)
 
     for o, a in opts:
+        if o == '-P':
+            left = a.split('=')[0]
+            right = a.split('=')[1]
+            configset(myModel.config,'variable_change_once',left,right,overwrite=True)
+        if o == '-p':
+            left = a.split('=')[0]
+            right = a.split('=')[1]
+            configset(myModel.config,'variable_change_timestep',left,right,overwrite=True)
+        if o == '-X': configset(myModel.config, 'model', 'OverWriteInit', '1', overwrite=True)
         if o == '-I': configset(myModel.config, 'model', 'reinit', '1', overwrite=True)
+        if o == '-i': configset(myModel.config, 'model', 'intbl', a, overwrite=True)
+        if o == '-s': configset(myModel.config, 'model', 'timestepsecs', a, overwrite=True)
+        if o == '-x': configset(myModel.config, 'model', 'sCatch', a, overwrite=True)
+        if o == '-c': configset(myModel.config, 'model', 'configfile', a, overwrite=True)
+        if o == '-M': configset(myModel.config, 'model', 'MassWasting', "0", overwrite=True)
+        if o == '-Q': configset(myModel.config, 'model', 'ExternalQbase', '1', overwrite=True)
+        if o == '-U':
+            configset(myModel.config, 'model', 'updateFile', a, overwrite=True)
+            configset(myModel.config, 'model', 'updating', "1", overwrite=True)
+        if o == '-u':
+            zz = []
+            exec "zz =" + a
+            updateCols = zz
+        if o == '-E': configset(myModel.config, 'model', 'reInfilt', '1', overwrite=True)
+        if o == '-R': runId = a
+        if o == '-W': configset(myModel.config, 'model', 'waterdem', '1', overwrite=True)
+
 
     dynModelFw._runInitial()
     dynModelFw._runResume()

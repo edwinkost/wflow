@@ -51,6 +51,23 @@ import netCDF4 as nc4
 import gzip, zipfile
 
 
+
+def sum_list_cover(list_of_maps, covermap):
+    """
+    Sums a list of pcrastermap using cover to fill in missing values
+
+    :param list_of_maps: list of maps to sum
+    :param covermap: maps/ value to use fro cover
+
+    :return: sum of list of maps (single map)
+    """
+    sum_ = cover(0.0)
+    for map in list_of_maps:
+        sum_ = sum_ + cover(map,covermap)
+
+    return sum_
+
+
 def idtoid(sourceidmap, targetidmap,valuemap):
     """
     tranfer the values from valuemap at the point id's in sourceidmap to the areas in targetidmap.
@@ -257,10 +274,11 @@ def getgridparams():
         - ysize - size of a cell in y direction
         - cols - number of columns
         - rows - number of rows
-        - xlr
-        - ylr
+        - xlr -  x lower right centre
+        - ylr -  y lower right centre
     """
-    
+    # This is the default, but add for safety...
+    setglobaloption("coorcentre")
     # x and Y are the same for now
     xy = pcr2numpy(celllength(),numpy.nan)[0,0]
     xu = pcr2numpy(xcoordinate(1),numpy.nan)[0,0]

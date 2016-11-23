@@ -1,6 +1,30 @@
 Release notes
 =============
 
+
+2016.04
+-------
+.. note::
+
+    Several none-backwards compatible changes will be part of this release. Use 2016.03 for older models
+
++ update soil names in sbm to the sbm2 names:
+  + FirstZoneKsatVer -> KsatVer
+  + FirstZoneMinCapacity -> SoilMinThickness
+  + FirstZoneCapacity (FirstZoneThickness) -> SoilThickness
+  + FirstZoneCapacity -> SoilWaterCapacity
+  + FirstZoneFlux -> SatWaterFlux
+  + FirstZoneDepth -> SatWaterDepth
++ [model]reinit moved to [run]reinit (same for fewsrun) in all models
++ added [rollingmean] section in framework
++ updates to topoflex
+
+
+2016.03
+-------
++ last tag before moving to new names in SBM
++ irrigation added to SBM/SBM2
+
 2016.02
 -------
 + added better BMI support
