@@ -809,6 +809,17 @@ def main():
     else:
         ds_inun.close()
 
+    # save also file to pcraster maps
+    input_tif_file = inun_file
+    output_pcr_file = inun_file + ".map"
+    msg = 'Saving also the file to pcraster format: ' + str(output_pcr_file)
+    logger.info(msg)
+    cmd = 'gdal_translate -of PCRaster ' + input_tif_file + " " + output_pcr_file
+    print cmd; os.system(cmd)
+    # change the y orientation to the default pcraster format 
+    cmd = 'mapattr -s -P yb2t ' + str(output_pcr_file)
+    print cmd; os.system(cmd)
+    
     ds_ldd = None
     # rename temporary file to final hand file
     if os.path.isfile(inun_file):
