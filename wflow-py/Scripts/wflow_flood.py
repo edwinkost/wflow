@@ -809,6 +809,13 @@ def main():
     else:
         ds_inun.close()
 
+    ds_ldd = None
+    # rename temporary file to final hand file
+    if os.path.isfile(inun_file):
+        # remove an old result if available
+        os.unlink(inun_file)
+    os.rename(inun_file_tmp, inun_file)
+
     # save also file to pcraster maps
     input_tif_file = inun_file
     output_pcr_file = inun_file + ".map"
@@ -819,13 +826,8 @@ def main():
     # change the y orientation to the default pcraster format 
     cmd = 'mapattr -s -P yb2t ' + str(output_pcr_file)
     print cmd; os.system(cmd)
-    
-    ds_ldd = None
-    # rename temporary file to final hand file
-    if os.path.isfile(inun_file):
-        # remove an old result if available
-        os.unlink(inun_file)
-    os.rename(inun_file_tmp, inun_file)
+    # remove xml file
+    os.unlink(output_pcr_file + ".aux.xml")
 
     logger.info('Done! Thank you for using hand_contour_inun.py')
     logger, ch = inun_lib.closeLogger(logger, ch)
